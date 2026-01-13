@@ -1,9 +1,13 @@
 import { useCallback, useState } from 'react';
-import { Upload, FileIcon, X, AlertCircle } from 'lucide-react';
+import { Upload, FileIcon, X, AlertCircle, Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface FileUploadZoneProps {
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File, password?: string) => void;
   isUploading: boolean;
   error?: string;
 }
@@ -32,6 +36,9 @@ export function FileUploadZone({ onFileSelect, isUploading, error }: FileUploadZ
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [passwordEnabled, setPasswordEnabled] = useState(false);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateFile = useCallback((file: File): string | null => {
     if (file.size > MAX_FILE_SIZE) {
@@ -51,8 +58,13 @@ export function FileUploadZone({ onFileSelect, isUploading, error }: FileUploadZ
     }
     setValidationError(null);
     setSelectedFile(file);
-    onFileSelect(file);
-  }, [onFileSelect, validateFile]);
+  }, [validateFile]);
+
+  const handleUpload = () => {
+    if (selectedFile) {
+      onFileSelect(selectedFile, passwordEnabled ? password : undefined);
+    }
+  };
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -79,6 +91,8 @@ export function FileUploadZone({ onFileSelect, isUploading, error }: FileUploadZ
   const clearFile = useCallback(() => {
     setSelectedFile(null);
     setValidationError(null);
+    setPasswordEnabled(false);
+    setPassword('');
   }, []);
 
   const formatFileSize = (bytes: number) => {
@@ -90,13 +104,13 @@ export function FileUploadZone({ onFileSelect, isUploading, error }: FileUploadZ
   const displayError = error || validationError;
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         className={cn(
-          "relative w-full min-h-[280px] rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer",
+          "relative w-full min-h-[200px] rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer",
           "flex flex-col items-center justify-center gap-4 p-8",
           isDragging 
             ? "border-primary bg-primary/5 scale-[1.02]" 
@@ -171,6 +185,66 @@ export function FileUploadZone({ onFileSelect, isUploading, error }: FileUploadZ
           </div>
         )}
       </div>
+
+      {/* Password Protection */}
+      {selectedFile && !displayError && (
+        <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Lock className="w-4 h-4 text-muted-foreground" />
+              <Label htmlFor="file-password-toggle" className="text-sm font-medium cursor-pointer">
+                Password Protection
+              </Label>
+            </div>
+            <Switch
+              id="file-password-toggle"
+              checked={passwordEnabled}
+              onCheckedChange={setPasswordEnabled}
+            />
+          </div>
+          
+          {passwordEnabled && (
+            <div className="relative animate-fade-in">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Upload Button */}
+      {selectedFile && !displayError && (
+        <Button
+          onClick={handleUpload}
+          disabled={isUploading || (passwordEnabled && !password.trim())}
+          size="lg"
+          className="w-full gap-2 animate-fade-in"
+        >
+          {isUploading ? (
+            <>
+              <div className="w-4 h-4 rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground animate-spin" />
+              Uploading...
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4" />
+              Generate QR Code
+            </>
+          )}
+        </Button>
+      )}
 
       {displayError && (
         <div className="mt-3 flex items-center gap-2 text-destructive animate-fade-in">

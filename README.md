@@ -1,73 +1,100 @@
-# Welcome to your Lovable project
+# 🔗 QR Share
 
-## Project info
+**Share text and files instantly via QR codes with optional password protection**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+- **📝 Text Message Sharing** - Share unlimited text instantly via QR code
+- **📁 File Upload Support** - Upload PDFs, images, videos, audio, and documents (up to 50MB)
+- **🔒 Password Protection** - Secure your content with SHA-256 encrypted passwords
+- **📱 QR Code Generation** - High error correction for reliable scanning
+- **📄 A4 PDF Download** - Print-ready QR codes for physical sharing
+- **📋 One-Click Copy** - Instantly copy shareable links
+- **🎨 Modern UI** - Clean, responsive design that works on all devices
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Tech Stack
 
-**Use your preferred IDE**
+| Technology | Purpose |
+|------------|---------|
+| **React 18** | UI Framework |
+| **TypeScript** | Type Safety |
+| **Vite** | Build Tool |
+| **Tailwind CSS** | Styling |
+| **shadcn/ui** | UI Components |
+| **Supabase** | Backend & Storage |
+| **QRCode.js** | QR Generation |
+| **jsPDF** | PDF Export |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Node.js 18+ and npm
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd qr-share
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📖 Usage
 
-**Use GitHub Codespaces**
+### Share Text Messages
+1. Select the "Text" tab
+2. Enter your message (no character limit)
+3. Optionally enable password protection
+4. Click "Generate QR Code"
+5. Download PDF or copy the link
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Share Files
+1. Select the "File" tab
+2. Drag & drop or click to upload a file
+3. Optionally set a password
+4. Click "Upload & Generate QR"
+5. Share the QR code or link
 
-## What technologies are used for this project?
+### Password Protection
+- Enable the password toggle before generating
+- Recipients must enter the correct password to view content
+- Passwords are securely hashed using SHA-256
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📸 Screenshots
 
-## How can I deploy this project?
+| Home Page | QR Result |
+|-----------|-----------|
+| Upload text or files | Generated QR with download options |
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 📄 License
 
-Yes, you can!
+MIT License - feel free to use this project for personal or commercial purposes.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📬 Contact
+
+Have questions or suggestions? Feel free to reach out on [Linkdin](https://www.linkedin.com/in/sunny-kumar-dubey-375082296/)

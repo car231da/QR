@@ -6,19 +6,33 @@ interface TextResult {
   textPreview: string;
 }
 
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 export function useTextMessage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TextResult | null>(null);
 
-  const saveText = useCallback(async (content: string) => {
+  const saveText = useCallback(async (content: string, password?: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
+      const insertData: { content: string; password_hash?: string } = { content };
+      
+      if (password && password.trim()) {
+        insertData.password_hash = await hashPassword(password.trim());
+      }
+
       const { data, error: insertError } = await supabase
         .from('text_messages')
-        .insert({ content })
+        .insert(insertData)
         .select('id')
         .single();
 
@@ -26,7 +40,6 @@ export function useTextMessage() {
         throw insertError;
       }
 
-      // Use the React app route instead of edge function
       const viewUrl = `${window.location.origin}/view?id=${data.id}`;
 
       const textResult = {

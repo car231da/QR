@@ -3,10 +3,13 @@ import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Lock, Eye, EyeOff, AlertCircle, Download, FileIcon } from 'lucide-react';
 
-interface TextMessage {
-  content: string;
+interface FileUpload {
+  file_name: string;
+  file_size: number;
+  file_type: string;
+  public_url: string;
   created_at: string;
   password_hash: string | null;
 }
@@ -19,9 +22,9 @@ async function hashPassword(password: string): Promise<string> {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-export default function ViewText() {
+export default function ViewFile() {
   const [searchParams] = useSearchParams();
-  const [message, setMessage] = useState<TextMessage | null>(null);
+  const [file, setFile] = useState<FileUpload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProtected, setIsProtected] = useState(false);
@@ -34,24 +37,24 @@ export default function ViewText() {
   const id = searchParams.get('id');
 
   useEffect(() => {
-    async function fetchMessage() {
+    async function fetchFile() {
       if (!id) {
-        setError('Missing message ID');
+        setError('Missing file ID');
         setLoading(false);
         return;
       }
 
       try {
         const { data, error: fetchError } = await supabase
-          .from('text_messages')
-          .select('content, created_at, password_hash')
+          .from('file_uploads')
+          .select('file_name, file_size, file_type, public_url, created_at, password_hash')
           .eq('id', id)
           .single();
 
         if (fetchError || !data) {
-          setError('Message not found');
+          setError('File not found');
         } else {
-          setMessage(data);
+          setFile(data);
           if (data.password_hash) {
             setIsProtected(true);
           } else {
@@ -59,17 +62,17 @@ export default function ViewText() {
           }
         }
       } catch (err) {
-        setError('Failed to load message');
+        setError('Failed to load file');
       } finally {
         setLoading(false);
       }
     }
 
-    fetchMessage();
+    fetchFile();
   }, [id]);
 
   const handlePasswordSubmit = async () => {
-    if (!password.trim() || !message?.password_hash) return;
+    if (!password.trim() || !file?.password_hash) return;
     
     setVerifying(true);
     setPasswordError(null);
@@ -77,7 +80,7 @@ export default function ViewText() {
     try {
       const hashedInput = await hashPassword(password.trim());
       
-      if (hashedInput === message.password_hash) {
+      if (hashedInput === file.password_hash) {
         setUnlocked(true);
       } else {
         setPasswordError('Incorrect password');
@@ -89,11 +92,17 @@ export default function ViewText() {
     }
   };
 
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-4">
         <div className="glass-card p-8 rounded-2xl">
-          <div className="animate-pulse text-foreground">Loading message...</div>
+          <div className="animate-pulse text-foreground">Loading file...</div>
         </div>
       </div>
     );
@@ -119,8 +128,8 @@ export default function ViewText() {
             <div className="w-16 h-16 mx-auto rounded-full bg-primary-foreground/20 flex items-center justify-center mb-4">
               <Lock className="w-8 h-8" />
             </div>
-            <h1 className="text-xl font-bold">Protected Message</h1>
-            <p className="text-sm opacity-80 mt-1">Enter password to view</p>
+            <h1 className="text-xl font-bold">Protected File</h1>
+            <p className="text-sm opacity-80 mt-1">Enter password to access</p>
           </div>
           <div className="p-6 bg-card space-y-4">
             <div className="relative">
@@ -153,7 +162,7 @@ export default function ViewText() {
               className="w-full"
               disabled={!password.trim() || verifying}
             >
-              {verifying ? 'Verifying...' : 'Unlock Message'}
+              {verifying ? 'Verifying...' : 'Unlock File'}
             </Button>
           </div>
         </div>
@@ -161,21 +170,36 @@ export default function ViewText() {
     );
   }
 
-  const formattedDate = message ? new Date(message.created_at).toLocaleString() : '';
+  const formattedDate = file ? new Date(file.created_at).toLocaleString() : '';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-4">
-      <div className="glass-card-elevated max-w-2xl w-full rounded-2xl overflow-hidden">
+      <div className="glass-card-elevated max-w-md w-full rounded-2xl overflow-hidden">
         <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-6">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            📄 Shared Message
+            📁 Shared File
           </h1>
           <p className="text-sm opacity-80 mt-1">Created: {formattedDate}</p>
         </div>
         <div className="p-6 bg-card">
-          <div className="text-lg leading-relaxed text-card-foreground whitespace-pre-wrap break-words">
-            {message?.content}
+          <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 mb-4">
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <FileIcon className="w-6 h-6 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-foreground truncate">{file?.file_name}</p>
+              <p className="text-sm text-muted-foreground">
+                {file && formatFileSize(file.file_size)} • {file?.file_type.split('/')[1]?.toUpperCase() || 'FILE'}
+              </p>
+            </div>
           </div>
+          
+          <Button asChild className="w-full gap-2">
+            <a href={file?.public_url} download={file?.file_name} target="_blank" rel="noopener noreferrer">
+              <Download className="w-4 h-4" />
+              Download File
+            </a>
+          </Button>
         </div>
         <div className="border-t border-border p-4 text-center text-muted-foreground text-sm bg-muted/30">
           Shared via QR Share

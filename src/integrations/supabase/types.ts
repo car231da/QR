@@ -22,6 +22,7 @@ export type Database = {
           file_size: number
           file_type: string
           id: string
+          password_hash: string | null
           public_url: string
         }
         Insert: {
@@ -31,6 +32,7 @@ export type Database = {
           file_size: number
           file_type: string
           id?: string
+          password_hash?: string | null
           public_url: string
         }
         Update: {
@@ -40,6 +42,7 @@ export type Database = {
           file_size?: number
           file_type?: string
           id?: string
+          password_hash?: string | null
           public_url?: string
         }
         Relationships: []
@@ -49,16 +52,19 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          password_hash: string | null
         }
         Insert: {
           content: string
           created_at?: string
           id?: string
+          password_hash?: string | null
         }
         Update: {
           content?: string
           created_at?: string
           id?: string
+          password_hash?: string | null
         }
         Relationships: []
       }

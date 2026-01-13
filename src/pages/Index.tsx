@@ -18,15 +18,15 @@ const Index = () => {
   const [mode, setMode] = useState<Mode>('text');
   const [view, setView] = useState<View>('input');
 
-  const handleFileSelect = useCallback(async (file: File) => {
-    const result = await uploadFile(file);
+  const handleFileSelect = useCallback(async (file: File, password?: string) => {
+    const result = await uploadFile(file, password);
     if (result) {
       setView('result');
     }
   }, [uploadFile]);
 
-  const handleTextSubmit = useCallback(async (text: string) => {
-    const result = await saveText(text);
+  const handleTextSubmit = useCallback(async (text: string, password?: string) => {
+    const result = await saveText(text, password);
     if (result) {
       setView('result');
     }
